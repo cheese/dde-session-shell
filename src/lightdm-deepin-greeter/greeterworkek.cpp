@@ -266,6 +266,7 @@ void GreeterWorkek::prompt(QString text, QLightDM::Greeter::PromptType type)
     // Don't show password prompt from standard pam modules since
     // we'll provide our own prompt or just not.
     const QString msg = text.simplified() == "Password:" ? "" : text;
+    qDebug() << Q_FUNC_INFO << "greeter workek prompt: " << text << " prompt Type" << type;
 
     switch (type) {
     case QLightDM::Greeter::PromptTypeSecret:
@@ -274,10 +275,12 @@ void GreeterWorkek::prompt(QString text, QLightDM::Greeter::PromptType type)
         if (msg.isEmpty()) {
             m_greeter->respond(m_password);
         } else {
+            qDebug() << Q_FUNC_INFO << "lightdm greeter prompt type secret: " << msg;
             emit m_model->authFaildMessage(msg);
         }
         break;
     case QLightDM::Greeter::PromptTypeQuestion:
+        qDebug() << Q_FUNC_INFO << "lightdm greeter prompt type Question: " << msg;
         emit m_model->authTipsMessage(text);
         break;
     }
@@ -305,10 +308,13 @@ void GreeterWorkek::message(QString text, QLightDM::Greeter::MessageType type)
     case QLightDM::Greeter::MessageTypeInfo:
         if (m_isThumbAuth) break;
 
+        qDebug() << Q_FUNC_INFO << "lightdm greeter message type info: " << text.toUtf8() << QString(dgettext("fprintd", text.toUtf8()));
         emit m_model->authFaildMessage(QString(dgettext("fprintd", text.toUtf8())));
         break;
 
     case QLightDM::Greeter::MessageTypeError:
+
+        qDebug() << Q_FUNC_INFO << "lightdm greeter message type error: " << text.toUtf8() << QString(dgettext("fprintd", text.toUtf8()));
         emit m_model->authFaildTipsMessage(QString(dgettext("fprintd", text.toUtf8())));
         break;
     }

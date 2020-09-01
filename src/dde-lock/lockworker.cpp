@@ -182,11 +182,13 @@ void LockWorker::enableZoneDetected(bool disable)
 
 void LockWorker::onDisplayErrorMsg(const QString &msg)
 {
+    qDebug() << Q_FUNC_INFO << "lock worker display error: " << msg;
     emit m_model->authFaildTipsMessage(msg);
 }
 
 void LockWorker::onDisplayTextInfo(const QString &msg)
 {
+    qDebug() << Q_FUNC_INFO << "lock worker display text: " << msg;
     emit m_model->authFaildMessage(msg);
 }
 

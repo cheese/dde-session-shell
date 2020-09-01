@@ -105,15 +105,18 @@ const QString DeepinAuthFramework::RequestEchoOn(const QString &msg)
 
 void DeepinAuthFramework::DisplayErrorMsg(const QString &msg)
 {
+    qDebug() << Q_FUNC_INFO << "auth framework display error: " << msg;
     m_interface->onDisplayErrorMsg(msg);
 }
 
 void DeepinAuthFramework::DisplayTextInfo(const QString &msg)
 {
+    qDebug() << Q_FUNC_INFO << "auth framework display text: " << msg;
     m_interface->onDisplayTextInfo(msg);
 }
 
 void DeepinAuthFramework::RespondResult(const QString &msg)
 {
+    qDebug() << Q_FUNC_INFO << "auth framework respond result: " << msg;
     m_interface->onPasswordResult(msg);
 }
