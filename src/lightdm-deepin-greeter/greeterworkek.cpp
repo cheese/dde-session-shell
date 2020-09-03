@@ -169,6 +169,7 @@ void GreeterWorkek::authUser(const QString &password)
     else {
         if (m_greeter->inAuthentication()) {
             m_greeter->respond(password);
+            m_password.clear();
         }
         else {
             m_greeter->authenticate(user->name());
@@ -255,7 +256,7 @@ void GreeterWorkek::onCurrentUserChanged(const QString &user)
 
 void GreeterWorkek::userAuthForLightdm(std::shared_ptr<User> user)
 {
-    if (!user->isNoPasswdGrp()) {
+    if (user.get()!=nullptr && !user->isNoPasswdGrp()) {
         //后端需要大约600ms时间去释放指纹设备
         resetLightdmAuth(user, 100, true);
     }
@@ -274,6 +275,7 @@ void GreeterWorkek::prompt(QString text, QLightDM::Greeter::PromptType type)
 
         if (msg.isEmpty()) {
             m_greeter->respond(m_password);
+            m_password.clear();
         } else {
             qDebug() << Q_FUNC_INFO << "lightdm greeter prompt type secret: " << msg;
             emit m_model->authFaildMessage(msg);
@@ -397,6 +399,8 @@ void GreeterWorkek::recoveryUserKBState(std::shared_ptr<User> user)
     //    PowerInter powerInter("com.deepin.system.Power", "/com/deepin/system/Power", QDBusConnection::systemBus(), this);
     //    const BatteryPresentInfo info = powerInter.batteryIsPresent();
     //    const bool defaultValue = !info.values().first();
+    if (user.get() == nullptr) return;
+
     const bool enabled = UserNumlockSettings(user->name()).get(false);
 
     qDebug() << "restore numlock status to " << enabled;
