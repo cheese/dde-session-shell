@@ -265,22 +265,23 @@ void GreeterWorkek::prompt(QString text, QLightDM::Greeter::PromptType type)
 {
     // Don't show password prompt from standard pam modules since
     // we'll provide our own prompt or just not.
+    qDebug() << "pam prompt: " << text << type;
+
     const QString msg = text.simplified() == "Password:" ? "" : text;
 
     switch (type) {
     case QLightDM::Greeter::PromptTypeSecret:
-        if(msg.isEmpty()) break;
+        m_authenticating = false;
+
+        if (msg.isEmpty()) break;
 
         if (!m_password.isEmpty()) {
             m_greeter->respond(m_password);
         } else {
-            qDebug() << Q_FUNC_INFO << "lightdm greeter prompt type secret: " << msg;
             emit m_model->authFaildMessage(msg);
-            m_authenticating = false;
         }
         break;
     case QLightDM::Greeter::PromptTypeQuestion:
-        qDebug() << Q_FUNC_INFO << "lightdm greeter prompt type Question: " << msg;
         emit m_model->authTipsMessage(text);
         break;
     }
