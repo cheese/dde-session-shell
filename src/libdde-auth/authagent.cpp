@@ -60,7 +60,7 @@ void AuthAgent::Authenticate(const QString& username)
          qDebug() << "pam_end() failed: %s" << pam_strerror(m_pamHandle, rc);
     }
 
-    m_isCondition = true;
+    m_isCondition = 0;
     emit respondResult(msg);
 }
 
