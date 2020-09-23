@@ -292,15 +292,16 @@ void GreeterWorkek::message(QString text, QLightDM::Greeter::MessageType type)
 {
     qDebug() << "pam message: " << text << type;
 
+    if(text.isEmpty()) return;
+
     switch (type) {
     case QLightDM::Greeter::MessageTypeInfo:
-        qDebug() << Q_FUNC_INFO << "lightdm greeter message type info: " << text.toUtf8() << QString(dgettext("fprintd", text.toUtf8()));
+        qDebug() << Q_FUNC_INFO << "message info: " << text.toUtf8() << QString(dgettext("fprintd", text.toUtf8()));
         emit m_model->authFaildMessage(QString(dgettext("fprintd", text.toUtf8())));
         break;
 
     case QLightDM::Greeter::MessageTypeError:
-
-        qDebug() << Q_FUNC_INFO << "lightdm greeter message type error: " << text.toUtf8() << QString(dgettext("fprintd", text.toUtf8()));
+        qDebug() << Q_FUNC_INFO << "message error: " << text.toUtf8() << QString(dgettext("fprintd", text.toUtf8()));
         emit m_model->authFaildTipsMessage(QString(dgettext("fprintd", text.toUtf8())));
         break;
     }
