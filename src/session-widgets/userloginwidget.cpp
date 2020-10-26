@@ -409,19 +409,25 @@ void UserLoginWidget::hideEvent(QHideEvent *event)
 
 bool UserLoginWidget::eventFilter(QObject *watched, QEvent *event)
 {
-//    if (watched == m_passwordEdit->lineEdit()) {
-//        if (event->type() == QEvent::KeyPress) {
-//            QKeyEvent *key_event = static_cast<QKeyEvent *>(event);
-//            if (key_event->modifiers() & (Qt::ControlModifier | Qt::AltModifier | Qt::MetaModifier)) {
-//                if ((key_event->modifiers() & Qt::ControlModifier) && (key_event->key() == Qt::Key_A))
-//                    return false;
-//                return true;
-//            }
-//        }
-//    }
+    if (watched == m_passwordEdit->lineEdit()) {
+        if (event->type() == QEvent::KeyPress) {
+            QKeyEvent *key_event = static_cast<QKeyEvent *>(event);
+            qDebug()<<"0000000000000000000 key_event->key() = " << key_event->key();
+            if (key_event->modifiers() & (Qt::ControlModifier | Qt::AltModifier | Qt::MetaModifier)) {
+                if ((key_event->modifiers() & Qt::ControlModifier) && (key_event->key() == Qt::Key_A))
+                    return false;
+                return true;
+            } else if (key_event->key() == Qt::Key_Return) {
+                qDebug()<<"111111111111111 Key_Enter";
+                const QString account = m_accountEdit->text();
+                const QString passwd = m_passwordEdit->text();
 
-    qDebug() << "eventFilter watched = " << watched;
-    qDebug() << "eventFilter event->type() = " << event->type();
+                m_accountEdit->lineEdit()->setEnabled(false);
+                emit requestAuthUser(account, passwd);
+
+            }
+        }
+    }
     return QObject::eventFilter(watched, event);
 }
 
