@@ -420,7 +420,9 @@ bool UserLoginWidget::eventFilter(QObject *watched, QEvent *event)
 //        }
 //    }
 
-    return QWidget::eventFilter(watched, event);
+    qDebug() << "eventFilter watched = " << watched;
+    qDebug() << "eventFilter event->type() = " << event->type();
+    return QObject::eventFilter(watched, event);
 }
 
 //初始化窗体控件
@@ -529,6 +531,7 @@ void UserLoginWidget::initConnect()
         FrameDataBind::Instance()->updateValue("UserLoginPassword", value);
     });
     connect(m_passwordEdit, &DPasswordEditEx::returnPressed, this, [ = ] {
+        qDebug() << "Press return to auth accounts and password " ;
         const QString account = m_accountEdit->text();
         const QString passwd = m_passwordEdit->text();
 
