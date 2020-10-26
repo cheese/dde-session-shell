@@ -420,7 +420,7 @@ bool UserLoginWidget::eventFilter(QObject *watched, QEvent *event)
         }
     }
 
-    return QObject::eventFilter(watched, event);
+    return QWidget::eventFilter(watched, event);
 }
 
 //初始化窗体控件
