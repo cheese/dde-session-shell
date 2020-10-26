@@ -409,16 +409,16 @@ void UserLoginWidget::hideEvent(QHideEvent *event)
 
 bool UserLoginWidget::eventFilter(QObject *watched, QEvent *event)
 {
-    if (watched == m_passwordEdit->lineEdit()) {
-        if (event->type() == QEvent::KeyPress) {
-            QKeyEvent *key_event = static_cast<QKeyEvent *>(event);
-            if (key_event->modifiers() & (Qt::ControlModifier | Qt::AltModifier | Qt::MetaModifier)) {
-                if ((key_event->modifiers() & Qt::ControlModifier) && (key_event->key() == Qt::Key_A))
-                    return false;
-                return true;
-            }
-        }
-    }
+//    if (watched == m_passwordEdit->lineEdit()) {
+//        if (event->type() == QEvent::KeyPress) {
+//            QKeyEvent *key_event = static_cast<QKeyEvent *>(event);
+//            if (key_event->modifiers() & (Qt::ControlModifier | Qt::AltModifier | Qt::MetaModifier)) {
+//                if ((key_event->modifiers() & Qt::ControlModifier) && (key_event->key() == Qt::Key_A))
+//                    return false;
+//                return true;
+//            }
+//        }
+//    }
 
     return QWidget::eventFilter(watched, event);
 }
