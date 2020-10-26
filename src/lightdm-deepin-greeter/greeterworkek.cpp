@@ -77,6 +77,7 @@ GreeterWorkek::GreeterWorkek(SessionBaseModel *const model, QObject *parent)
     connect(model, &SessionBaseModel::lockChanged, this, [ = ](bool lock) {
         if (!lock) {
             m_password.clear();
+            qDebug() << "111111111 SessionBaseModel::lockChanged" ;
             resetLightdmAuth(m_model->currentUser(), 100, false);
         }
     });
@@ -84,6 +85,7 @@ GreeterWorkek::GreeterWorkek(SessionBaseModel *const model, QObject *parent)
     connect(m_login1SessionSelf, &Login1SessionSelf::ActiveChanged, this, [ = ](bool active) {
         if(active) {
             m_authenticating = false;
+            qDebug() << "2222222222 Login1SessionSelf::ActiveChanged" ;
             resetLightdmAuth(m_model->currentUser(), 100, false);
         }
     });
@@ -250,6 +252,7 @@ void GreeterWorkek::userAuthForLightdm(std::shared_ptr<User> user)
 {
     if (user.get() != nullptr && !user->isNoPasswdGrp()) {
         //后端需要大约600ms时间去释放指纹设备
+        qDebug() << "33333333333 后端需要大约600ms时间去释放指纹设备" ;
         resetLightdmAuth(user, 100, true);
     }
 }
@@ -306,6 +309,7 @@ void GreeterWorkek::authenticationComplete()
     if (!m_greeter->isAuthenticated()) {
         m_authenticating = false;
         if (m_password.isEmpty()) {
+            qDebug() << "4444444444 authenticationComplete" ;
             resetLightdmAuth(m_model->currentUser(), 100, false);
             return;
         }
@@ -324,7 +328,7 @@ void GreeterWorkek::authenticationComplete()
             m_model->currentUser()->startLock();
             return;
         }
-
+        qDebug() << "55555555555555 authenticationComplete" ;
         resetLightdmAuth(m_model->currentUser(), 100, false);
 
         return;
@@ -385,7 +389,7 @@ void GreeterWorkek::recoveryUserKBState(std::shared_ptr<User> user)
     bool cur_numlock = KeyboardMonitor::instance()->isNumlockOn();
     KeyboardMonitor::instance()->setNumlockStatus(!cur_numlock);
     KeyboardMonitor::instance()->setNumlockStatus(cur_numlock);
-
+    qDebug() << "66666666666666 recoveryUserKBState" ;
     KeyboardMonitor::instance()->setNumlockStatus(enabled);
 }
 
