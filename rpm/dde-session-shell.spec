@@ -9,9 +9,9 @@
 
 
 Name:           %{dde_prefix}-session-shell
-Version:        5.3.0.39
+Version:        5.3.0.45
 Release:        1%{?fedora:%dist}
-Summary:        deepin-session-shell - Deepin desktop-environment - session-shell module
+Summary:        Deepin Desktop Environment - session-shell module
 License:        GPLv3+
 %if 0%{?fedora}
 URL:            https://github.com/linuxdeepin/%{repo}
@@ -39,6 +39,9 @@ BuildRequires:  %{dde_prefix}-qt-dbus-factory-devel
 BuildRequires:  gsettings-qt-devel
 BuildRequires:  lightdm-qt5-devel
 BuildRequires:  pam-devel
+# provides needed directories
+Requires:       dbus-common
+Requires:       /usr/bin/qdbus-qt5
 Requires:       lightdm
 Provides:       lightdm-deepin-greeter%{?_isa} = %{version}-%{release}
 Provides:       lightdm-greeter = 1.2
@@ -48,13 +51,19 @@ deepin-session-shell - Deepin desktop-environment - session-shell module.
 
 %prep
 %autosetup -p1 -n %{repo}-%{version}
-
-
+sed -i 's:/usr/lib:%{_libexecdir}:' scripts/lightdm-deepin-greeter
+sed -i 's/qdbus/qdbus-qt5/' files/*-wapper
+%if 0%{?fedora}
+# https://github.com/linuxdeepin/dde-session-shell/issues/21
+# work around by changing to Qt::FastTransformation
+sed -i 's/Qt::SmoothTransformation/Qt::FastTransformation/' \
+       src/widgets/fullscreenbackground.cpp
+# We don't have common-auth on Fedora
+sed -i 's/common-auth/password-auth/' src/libdde-auth/authagent.cpp
+%endif
 
 %build
 export PATH=$PATH:%{_qt5_bindir}
-cmake_version=$(cmake --version | head -1 | awk '{print $3}')
-sed -i "s|VERSION 3.13.4|VERSION $cmake_version|g" CMakeLists.txt
 %cmake %{!?fedora:.}
 %if 0%{?fedora}
 %cmake_build
@@ -68,16 +77,16 @@ sed -i "s|VERSION 3.13.4|VERSION $cmake_version|g" CMakeLists.txt
 %else
 %make_install
 %endif
+chmod -v 755 %{buildroot}%{_bindir}/*wapper
 
 %check
 desktop-file-validate %{buildroot}%{_datadir}/applications/dde-*.desktop
 
 %files
-%license LICENSE
 %{_bindir}/dde-lock
-%{_bindir}/dde-lock-wrapper
 %{_bindir}/dde-shutdown
-%{_bindir}/dde-shutdown-wrapper
+%{_bindir}/dde-lock-wapper
+%{_bindir}/dde-shutdown-wapper
 %{_bindir}/lightdm-deepin-greeter
 %attr(755,root,root) %{_bindir}/deepin-greeter
 %{_sysconfdir}/deepin/greeters.d/00-xrandr
@@ -90,5 +99,11 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/dde-*.desktop
 %{_datadir}/dbus-1/services/com.deepin.dde.shutdownFront.service
 
 %changelog
-* Thu Jun 11 2020 uoser <uoser@uniontech.com> - 5.0.0.8
-- Update to 5.0.0.8
+* Tue Nov 17 2020 Robin Lee <cheeselee@fedoraproject.org> - 5.3.0.24-1
+- Update to 5.3.0.24
+
+* Sat Nov 14 2020 Robin Lee <cheeselee@fedoraproject.org> - 5.3.0.22-2
+- Requires dbus-common
+
+* Fri Nov 13 2020 Robin Lee <cheeselee@fedoraproject.org> - 5.3.0.22-1
+- Initial packaging
