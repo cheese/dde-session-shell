@@ -39,9 +39,10 @@ BuildRequires:  %{dde_prefix}-qt-dbus-factory-devel
 BuildRequires:  gsettings-qt-devel
 BuildRequires:  lightdm-qt5-devel
 BuildRequires:  pam-devel
+BuildRequires:  make
 # provides needed directories
 Requires:       dbus-common
-Requires:       /usr/bin/qdbus-qt5
+Requires:       %{_bindir}/qdbus-qt5
 Requires:       lightdm
 Provides:       lightdm-deepin-greeter%{?_isa} = %{version}-%{release}
 Provides:       lightdm-greeter = 1.2
@@ -52,7 +53,7 @@ deepin-session-shell - Deepin desktop-environment - session-shell module.
 %prep
 %autosetup -p1 -n %{repo}-%{version}
 sed -i 's:/usr/lib:%{_libexecdir}:' scripts/lightdm-deepin-greeter
-sed -i 's/qdbus/qdbus-qt5/' files/*-wapper
+sed -i 's/qdbus /qdbus-qt5 /' files/*-wapper
 %if 0%{?fedora}
 # https://github.com/linuxdeepin/dde-session-shell/issues/21
 # work around by changing to Qt::FastTransformation
